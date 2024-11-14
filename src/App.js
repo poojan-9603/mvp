@@ -1,22 +1,22 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LoginPage from './pages/LoginPage'; // Import your LoginPage component
-import CreateAccount from './pages/CreateAccount'; // Import your CreateAccount component
-import FirstTimeLogin from './pages/FirstTimeLogIn'; // Import your FirstTimeLogin component
-import Dashboard from './pages/Dashboard'; // Import your Dashboard component
+import LoginPage from './pages/LoginPage';
+import CreateAccount from './pages/CreateAccount';
+import FirstTimeLogin from './pages/FirstTimeLogIn';
+import Dashboard from './pages/Dashboard';
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} /> {/* Home route */}
-        <Route path="/create-account" element={<CreateAccount />} /> {/* Route for create account */}
-        <Route path="/first-time-login" element={<FirstTimeLogin />} /> {/* Route for first time login */}
-        <Route path="/dashboard" element={<Dashboard />} /> {/* Route for dashboard */}
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/create-account" element={<CreateAccount />} />
+        <Route path="/first-time-login" element={<FirstTimeLogin />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
 };
 
+// Export the App component
 export default App;
