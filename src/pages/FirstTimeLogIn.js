@@ -1,14 +1,11 @@
-// src/pages/FirstTimeLogin.js
 import React, { useState } from 'react';
-import { db, auth } from '../firebase'; // Import Firestore database and Auth
-import { doc, setDoc, updateDoc, query, collection, where, getDocs } from 'firebase/firestore'; // Import Firestore functions
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import './FirstTimeLogin.css'; // Import the CSS file for styling
+import { db, auth } from '../firebase';
+import { doc, setDoc, updateDoc, query, collection, where, getDocs } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import './FirstTimeLogin.css';
 
 const FirstTimeLogin = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
-
-  // State variables for survey responses
+  const navigate = useNavigate();
   const [nickname, setNickname] = useState('');
   const [bikingExperience, setBikingExperience] = useState('');
   const [bikingFrequency, setBikingFrequency] = useState('');
@@ -16,8 +13,6 @@ const FirstTimeLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Create an object to hold the user's responses
     const userInfo = {
       nickname,
       bikingExperience,
@@ -26,33 +21,29 @@ const FirstTimeLogin = () => {
     };
 
     try {
-      // Get the currently authenticated user
-      const user = auth.currentUser; // Get the current user
-      const userId = user.uid; // Get the actual user ID
+      const user = auth.currentUser;
+      const userId = user.uid;
 
-      // Check if the user document exists in Firestore
       const userQuery = query(collection(db, "users"), where("uid", "==", userId));
       const userSnapshot = await getDocs(userQuery);
 
       if (userSnapshot.empty) {
-        // Create a new user document if it doesn't exist
         await setDoc(doc(db, "users", userId), {
           uid: userId,
-          userInfo, // Store userInfo as a single object
+          userInfo,
           firstTimeLogin: true,
           loggedIn: false,
         });
       } else {
-        // Update the existing user document
         await updateDoc(doc(db, "users", userSnapshot.docs[0].id), {
-          userInfo, // Update userInfo as a single object
-          firstTimeLogin: false,
-          loggedIn: true,
+          userInfo,
+          firstTimeLogin: true,
+          loggedIn: false,
         });
       }
 
       alert('Thank you for completing the survey!');
-      navigate('/bike-cost'); // Redirect to BikeCost.js
+      navigate('/bike-cost');
     } catch (error) {
       console.error('Error updating document: ', error);
       alert('There was an error submitting your response. Please try again.');
@@ -75,7 +66,6 @@ const FirstTimeLogin = () => {
             className="form-input"
           />
         </div>
-
         <div className="form-group">
           <label>Previous Biking Experience:</label>
           <div className="radio-group">
@@ -108,7 +98,6 @@ const FirstTimeLogin = () => {
             </label>
           </div>
         </div>
-
         <div className="form-group">
           <label htmlFor="bikingFrequency">How often do you wish to ride per week?</label>
           <select
@@ -129,7 +118,6 @@ const FirstTimeLogin = () => {
             <option value="7">7 (Every day! 🚴‍♂️💪)</option>
           </select>
         </div>
-
         <div className="form-group">
           <label>How hardcore are you?</label>
           <div className="radio-group">
@@ -162,7 +150,6 @@ const FirstTimeLogin = () => {
             </label>
           </div>
         </div>
-
         <button type="submit" className="submit-button">Submit</button>
       </form>
     </div>

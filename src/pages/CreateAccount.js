@@ -1,34 +1,30 @@
-// src/pages/CreateAccount.js
 import React, { useState } from 'react';
-import { db, auth } from '../firebase'; // Import Firestore and Auth instances
-import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
-import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import Auth functions
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { db, auth } from '../firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const CreateAccount = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Create user with email and password
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Add user data to Firestore
       await addDoc(collection(db, "users"), {
         uid: user.uid,
         email: user.email,
-        loggedIn: false, // Set loggedIn to false by default
-        firstTimeLogin: true, // Set firstTimeLogin to true
+        loggedIn: false,
+        firstTimeLogin: true,
       });
 
       alert('Account created successfully!');
-      // Navigate back to Login Page
-      navigate('/');
+      navigate('/login'); 
     } catch (error) {
       console.error('Error: ', error);
       alert('Error: ' + error.message);
@@ -69,7 +65,6 @@ const CreateAccount = () => {
   );
 };
 
-// Inline styles (you can reuse the styles from LoginPage.js)
 const styles = {
   loginContainer: {
     display: 'flex',
@@ -77,18 +72,18 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundColor: '#2c2c2c', // Dark grayish background
+    backgroundColor: '#2c2c2c',
   },
   loginTitle: {
     fontSize: '2rem',
     marginBottom: '20px',
-    color: '#ffffff', // White text for title
+    color: '#ffffff',
   },
   loginForm: {
     display: 'flex',
     flexDirection: 'column',
     width: '300px',
-    backgroundColor: '#3a3a3a', // Slightly lighter gray for form background
+    backgroundColor: '#3a3a3a',
     padding: '20px',
     borderRadius: '5px',
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
@@ -100,13 +95,13 @@ const styles = {
     width: '100%',
     padding: '10px',
     borderRadius: '5px',
-    border: '1px solid #007bff', // Blue border
-    backgroundColor: '#ffffff', // White background for input
+    border: '1px solid #007bff',
+    backgroundColor: '#ffffff',
     transition: 'border-color 0.3s, box-shadow 0.3s',
   },
   submitButton: {
     padding: '10px',
-    backgroundColor: '#007bff', // Blue background
+    backgroundColor: '#007bff',
     color: '#fff',
     border: 'none',
     borderRadius: '5px',
@@ -115,5 +110,4 @@ const styles = {
   },
 };
 
-// Export the CreateAccount component
 export default CreateAccount;

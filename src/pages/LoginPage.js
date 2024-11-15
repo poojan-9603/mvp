@@ -1,42 +1,34 @@
-// src/pages/LoginPage.js
 import React, { useState } from 'react';
-import { db, auth } from '../firebase'; // Import Firestore and Auth instances
-import { collection, getDocs, query, where, updateDoc, doc } from 'firebase/firestore'; // Import Firestore functions
-import { signInWithEmailAndPassword } from 'firebase/auth'; // Import Auth functions
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { db, auth } from '../firebase';
+import { collection, getDocs, query, where, updateDoc, doc } from 'firebase/firestore';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Login user with email and password
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Check if the user exists in Firestore
       const userQuery = query(collection(db, "users"), where("uid", "==", user.uid));
       const userSnapshot = await getDocs(userQuery);
 
       if (!userSnapshot.empty) {
         const userData = userSnapshot.docs[0].data();
-        
-        // Update the user's firstTimeLogin status to false and loggedIn to true
         await updateDoc(doc(db, "users", userSnapshot.docs[0].id), {
-          firstTimeLogin: false, // Set firstTimeLogin to false
-          loggedIn: true // Set loggedIn to true
+          firstTimeLogin: false,
+          loggedIn: true
         });
 
-        // Redirect based on firstTimeLogin status
         if (userData.firstTimeLogin) {
-          // Redirect to FirstTimeLogin.js
           navigate('/first-time-login');
         } else {
-          // Redirect to Dashboard.js
           navigate('/dashboard');
         }
       }
@@ -48,7 +40,7 @@ const LoginPage = () => {
 
   return (
     <div style={styles.loginContainer}>
-      <h1 style={styles.loginTitle}>Hello</h1> {/* Changed from "Login" to "Hello" */}
+      <h1 style={styles.loginTitle}>Hello</h1>
       <form style={styles.loginForm} onSubmit={handleSubmit}>
         <div style={styles.formGroup}>
           <label htmlFor="email">Email:</label>
@@ -77,7 +69,7 @@ const LoginPage = () => {
         </button>
       </form>
       <button 
-        onClick={() => navigate('/create-account')} // Navigate to Create Account page
+        onClick={() => navigate('/create-account')}
         style={styles.toggleButton}
       >
         Switch to Create Account
@@ -86,7 +78,6 @@ const LoginPage = () => {
   );
 };
 
-// Inline styles remain unchanged
 const styles = {
   loginContainer: {
     display: 'flex',
@@ -94,18 +85,18 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundColor: '#2c2c2c', // Dark grayish background
+    backgroundColor: '#2c2c2c',
   },
   loginTitle: {
     fontSize: '2rem',
     marginBottom: '20px',
-    color: '#ffffff', // White text for title
+    color: '#ffffff',
   },
   loginForm: {
     display: 'flex',
     flexDirection: 'column',
     width: '300px',
-    backgroundColor: '#3a3a3a', // Slightly lighter gray for form background
+    backgroundColor: '#3a3a3a',
     padding: '20px',
     borderRadius: '5px',
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
@@ -117,13 +108,13 @@ const styles = {
     width: '100%',
     padding: '10px',
     borderRadius: '5px',
-    border: '1px solid #007bff', // Blue border
-    backgroundColor: '#ffffff', // White background for input
+    border: '1px solid #007bff',
+    backgroundColor: '#ffffff',
     transition: 'border-color 0.3s, box-shadow 0.3s',
   },
   submitButton: {
     padding: '10px',
-    backgroundColor: '#007bff', // Blue background
+    backgroundColor: '#007bff',
     color: '#fff',
     border: 'none',
     borderRadius: '5px',
@@ -133,7 +124,7 @@ const styles = {
   toggleButton: {
     marginTop: '10px',
     padding: '10px',
-    backgroundColor: '#6c757d', // Gray background for toggle button
+    backgroundColor: '#6c757d',
     color: '#fff',
     border: 'none',
     borderRadius: '5px',
@@ -142,5 +133,4 @@ const styles = {
   },
 };
 
-// Export the LoginPage component
 export default LoginPage;
