@@ -40,7 +40,7 @@ const LoginPage = () => {
 
   return (
     <div style={styles.loginContainer}>
-      <h1 style={styles.loginTitle}>Login</h1>
+      <h1 style={styles.loginTitle}>Hello</h1> {/* Changed from "Login" to "Hello" */}
       <form style={styles.loginForm} onSubmit={handleSubmit}>
         <div style={styles.formGroup}>
           <label htmlFor="email">Email:</label>

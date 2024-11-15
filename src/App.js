@@ -1,8 +1,9 @@
+// src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import CreateAccount from './pages/CreateAccount';
-import FirstTimeLogin from './pages/FirstTimeLogIn';
+import FirstTimeLogin from './pages/FirstTimeLogIn'; // Ensure the import matches the filename
 import Dashboard from './pages/Dashboard';
 
 const App = () => {
