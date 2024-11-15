@@ -1,7 +1,7 @@
 // src/pages/LoginPage.js
 import React, { useState } from 'react';
 import { db, auth } from '../firebase'; // Import Firestore and Auth instances
-import { collection, getDocs, query, where } from 'firebase/firestore'; // Import Firestore functions
+import { collection, getDocs, query, where, updateDoc, doc } from 'firebase/firestore'; // Import Firestore functions
 import { signInWithEmailAndPassword } from 'firebase/auth'; // Import Auth functions
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
@@ -18,12 +18,20 @@ const LoginPage = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Check if the user is logging in for the first time
+      // Check if the user exists in Firestore
       const userQuery = query(collection(db, "users"), where("uid", "==", user.uid));
       const userSnapshot = await getDocs(userQuery);
 
       if (!userSnapshot.empty) {
         const userData = userSnapshot.docs[0].data();
+        
+        // Update the user's firstTimeLogin status to false and loggedIn to true
+        await updateDoc(doc(db, "users", userSnapshot.docs[0].id), {
+          firstTimeLogin: false, // Set firstTimeLogin to false
+          loggedIn: true // Set loggedIn to true
+        });
+
+        // Redirect based on firstTimeLogin status
         if (userData.firstTimeLogin) {
           // Redirect to FirstTimeLogin.js
           navigate('/first-time-login');
